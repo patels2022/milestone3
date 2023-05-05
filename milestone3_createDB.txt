@@ -1,0 +1,316 @@
+User 
+--------------------------
+const mongoose = require("mongoose");
+
+const UserSchema = new mongoose.Schema(
+  {
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("User", UserSchema);
+----------------------------------------------------
+Order
+-----------------------------------
+const mongoose = require("mongoose");
+
+const OrderSchema = new mongoose.Schema(
+  {
+    user: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    country: { type: String, required: true },
+    phoneNumber: { type: Number, required: true },
+    pinCode: { type: Number, required: true },
+    products: [
+      {
+        user: { type: String, required: true },
+        productId: { type: Number, required: true },
+        productName: { type: String, required: true },
+        productStatus: { type: String, required: true },
+        productDescription: { type: String, required: true },
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Order", OrderSchema);
+-----------------------------------------------------------
+Cart
+---------------------------------------------------------
+const mongoose = require("mongoose");
+
+const CartSchema = new mongoose.Schema(
+  {
+    user: { type: String, required: true },
+    productId: { type: Number, required: true },
+    productName: { type: String, required: true },
+    productStatus: { type: String, required: true },
+    productDescription: { type: String, required: true },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Cart", CartSchema);
+
+----------------------------------------------------------
+
+
+logic
+
+------------------------------------
+user
+-----------------------------------
+export default function Login() {
+  const [userData, setUserData] = useState({ email: "", password: "" });
+
+  const handleFormData = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const loginParams = {
+      email: userData.email,
+      password: userData.password,
+    };
+    await axios
+      .post(`http://localhost:8080/api/auth/login`, loginParams)
+      .then(async (res) => {
+        const token = res.data.accessToken;
+        const user = jwt(token);
+        console.log("user", user);
+        sessionStorage.setItem("token", JSON.stringify(token));
+        sessionStorage.setItem("user", JSON.stringify(user.email));
+        sessionStorage.setItem("userDetail", JSON.stringify(user));
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+----------------------------------------------------------------------
+Order
+-------------------------------------------------------------------------
+export default function UserCart() {
+  const [cartData, setCartData] = useState([]);
+
+  const userData = JSON.parse(sessionStorage.getItem("userDetail"));
+  const AuthStr = `Bearer ${JSON.parse(sessionStorage.getItem("token"))}`;
+
+  const fetchCartData = async () => {
+    try {
+      const cart = await axios.get(
+        `http://localhost:8080/api/cart/${userData.id}`,
+        {
+          headers: {
+            token: AuthStr,
+          },
+        }
+      );
+      setCartData(cart.data);
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const renderImage = (id) => {
+    switch (id) {
+      case 1:
+        return product1;
+      case 2:
+        return product2;
+      case 3:
+        return product3;
+      case 4:
+        return product4;
+      case 5:
+        return product5;
+      case 6:
+        return product6;
+      default:
+        return product1;
+    }
+  };
+
+  const handleRemoveFromCart = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/cart/${id}`, {
+        headers: {
+          token: AuthStr,
+        },
+      });
+      fetchCartData();
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
+
+  return (
+    <Layout>
+      <div className="cart-wrapper">
+        <h1>Your Cart</h1>
+        <div className="cart-body">
+          {cartData?.length > 0 ? (
+            cartData?.map((item) => (
+              <div key={item._id} className="cart-card">
+                <img
+                  src={renderImage(item.productId)}
+                  alt=""
+                  className="cart-img"
+                />
+                <div className="cart-name">
+                  <h3>{item.productName}</h3>
+                  <h5>{item.productStatus}</h5>
+                </div>
+                <div className="cart-button">
+                  <button onClick={() => handleRemoveFromCart(item._id)}>
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <h3>Your Cart is empty.</h3>
+          )}
+        </div>
+        {cartData?.length > 0 && (
+          <div className="cart-checkout-button">
+            <button>
+              <NavLink to="/order">Checkout Now</NavLink>
+            </button>
+          </div>
+        )}
+      </div>
+    </Layout>
+  );
+}
+-------------------------------------------------------------------------
+data population
+---------------------------------------------------------------------------
+
+_id
+64525a6b2c8cbfda928edb73
+firstname
+"vivek"
+lastname
+"patel"
+email
+"vivek@gmail.com"
+password
+"U2FsdGVkX1+gd5gu6/jBnU0AQcC1SbHcyuOhSn+Wlok="
+createdAt
+2023-05-03T12:58:19.718+00:00
+updatedAt
+2023-05-03T12:58:19.718+00:00
+__v
+0
+_id
+6452ab28e282adefe00ab8ac
+firstname
+"jay"
+lastname
+"patel"
+email
+"jay@gmail.com"
+password
+"U2FsdGVkX1+wgc13HjcWll9tf8MfAJGD4CS5hAM0lWs="
+createdAt
+2023-05-03T18:42:48.729+00:00
+updatedAt
+2023-05-03T18:42:48.729+00:00
+__v
+0
+_id
+6452abe9f8ff9af289f20baa
+firstname
+"jay"
+lastname
+"patel"
+email
+"jay007@gmail.com"
+password
+"U2FsdGVkX1/Ggn0HL/LCnaAi4uaR5fBQUEb3lXp5XYU="
+createdAt
+2023-05-03T18:46:01.420+00:00
+updatedAt
+2023-05-03T18:46:01.420+00:00
+__v
+0
+_id
+6453c134dc98d4659472af88
+firstname
+"smit"
+lastname
+"patel"
+email
+"smitpatel0928@gmail.com"
+password
+"U2FsdGVkX1+jcyjQfvKOhpaQcM9ainBWG443heQ5a1s="
+createdAt
+2023-05-04T14:29:08.241+00:00
+updatedAt
+2023-05-04T14:29:08.241+00:00
+__v
+0
+_id
+64547faedc98d4659472af98
+firstname
+"shriya"
+lastname
+"bhalodi"
+email
+"shriyabhalodi@gmail.com"
+password
+"U2FsdGVkX1+B4kEZ0Uixafbr/L+/8Sk2AxvL3Go0qbE="
+createdAt
+2023-05-05T04:01:50.261+00:00
+updatedAt
+2023-05-05T04:01:50.261+00:00
+__v
+0
+_id
+64548135358209c92502cd99
+firstname
+"Vrutik"
+lastname
+"Savaliya"
+email
+"vrutiksavaliya@gmail.com"
+password
+"U2FsdGVkX19bowMxHaPZaYcllGs+HRKy7y1V/Dw+x5A="
+createdAt
+2023-05-05T04:08:21.693+00:00
+updatedAt
+2023-05-05T04:08:21.693+00:00
+__v
+0
+_id
+64548197358209c92502cd9c
+firstname
+"smit"
+lastname
+"jesal"
+email
+"smitjesal@gmail.com"
+password
+"U2FsdGVkX195v4KQw5OIKk+IpNFv8e02j+DWtVQ6b8k="
+createdAt
+2023-05-05T04:09:59.860+00:00
+updatedAt
+2023-05-05T04:09:59.860+00:00
+__v
+0
+--------------------------------------------

@@ -1,0 +1,24 @@
+.card__status {
+  font-size: 0.8em;
+  color: #d7bdca;
+}
+.card__product__image {
+  width: 100%;
+  height: 300px;
+  border-top-left-radius: 20px;
+  object-fit: cover;
+}
+.card__buttons button {
+  height: 32px;
+  font-size: 0.7em;
+  border: none;
+  border-radius: 8px;
+  padding: 0 6px;
+  cursor: pointer;
+}
+.card__buttons button:hover {
+  opacity: 0.8;
+}
+.card__buttons button:first-child {
+  margin-right: 4px;
+}

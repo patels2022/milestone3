@@ -1,0 +1,116 @@
+i {
+  font-family: "Rubik", sans-serif;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.hype__ul {
+  margin: 0;
+  padding: 0;
+}
+
+.hype__image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+  height: 100vh;
+  object-fit: cover;
+  margin-bottom: 30px;
+}
+
+/* Style the list items */
+.hype__ul li {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  list-style-type: none;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Set all odd list items to a different color (zebra-stripes) */
+.hype__ul li:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+/* Darker background-color on hover */
+.hype__ul li:hover {
+  background: #ddd;
+}
+
+/* Style the header */
+.hype__header {
+  background-color: white;
+  padding: 30px 40px;
+  color: black;
+  text-align: center;
+}
+
+/* Clear floats after the header */
+.hype__header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the input */
+.hype__input {
+  margin: 0;
+  border: 1px;
+  border-color: black;
+  border-radius: 25px;
+  height: 50px;
+  width: 73%;
+  padding: 10px;
+  float: left;
+  font-size: 22px;
+}
+
+/* Style the "Add" button */
+.hype__addBtn {
+  padding: 13px;
+  width: 25%;
+  background: #2832c2;
+  color: white;
+  float: left;
+  text-align: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+  height: 50px;
+  border-radius: 25px;
+  margin-left: 5px;
+  line-height: 22px;
+}
+
+.hype__addBtn:hover {
+  background-color: #051094;
+}
+.hype__card {
+  /* Add shadows to create the "card" effect */
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  height: auto;
+  width: 50%;
+  border-bottom-left-radius: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 24px;
+}
